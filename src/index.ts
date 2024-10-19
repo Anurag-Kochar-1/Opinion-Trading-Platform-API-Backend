@@ -5,6 +5,8 @@ import { orderRouter } from "./routes/order";
 import { balanceRouter } from "./routes/balance";
 import { symbolRouter } from "./routes/symbol";
 import { resetRouter } from "./routes/reset-2";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 app.use(cors());
