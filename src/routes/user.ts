@@ -1,18 +1,16 @@
 import { Router } from "express";
 import { RedisManager } from "../lib/redis-manager";
+import { REQUEST_TYPE } from "../types";
 
 export const userRouter = Router();
 
 userRouter.post("/create/:userId", async (req, res) => {
   const { userId } = req.params;
   const response = await RedisManager.getInstance().sendAndAwait({
-    type: "CREATE_USER",
-    data: {
+    type: REQUEST_TYPE.CREATE_USER,
+    playload: {
       userId,
     },
   });
-  console.log(response.payload);
-  res.json({
-    message: "ok",
-  });
+  res.json(response.payload);
 });

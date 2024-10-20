@@ -6,6 +6,9 @@ import { balanceRouter } from "./routes/balance";
 import { symbolRouter } from "./routes/symbol";
 import { resetRouter } from "./routes/reset-2";
 import dotenv from "dotenv";
+import { orderBookRouter } from "./routes/orderbook";
+import { tradeRouter } from "./routes/trade";
+import { onRampRouter } from "./routes/onramp";
 dotenv.config();
 
 const app = express();
@@ -20,8 +23,11 @@ app.get("/", (_, res: Response) => {
 
 app.use("/user", userRouter);
 app.use("/order", orderRouter);
+app.use("/orderbook", orderBookRouter);
 app.use("/balance", balanceRouter);
 app.use("/symbol", symbolRouter);
+app.use("/trade", tradeRouter);
+app.use("/onramp", onRampRouter);
 app.use("/reset", resetRouter);
 
 app.listen(port, () => {
