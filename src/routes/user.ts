@@ -8,9 +8,10 @@ userRouter.post("/create/:userId", async (req, res) => {
   const { userId } = req.params;
   const response = await RedisManager.getInstance().sendAndAwait({
     type: REQUEST_TYPE.CREATE_USER,
-    playload: {
+    data: {
       userId,
     },
   });
+  console.log(JSON.stringify(response))
   res.json(response.payload);
 });

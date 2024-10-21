@@ -12,8 +12,8 @@ onRampRouter.post("/inr", async (req, res) => {
     return;
   }
   const response = await RedisManager.getInstance().sendAndAwait({
-    type: REQUEST_TYPE.ONRAMP_USER_BALANCE  ,
-    playload: { userId, amount },
+    type: REQUEST_TYPE.ONRAMP_USER_BALANCE,
+    data: { userId, amount },
   });
   res.json(response.payload);
 });

@@ -14,7 +14,7 @@ orderRouter.post("/buy", async (req, res) => {
 
   const response = await RedisManager.getInstance().sendAndAwait({
     type: REQUEST_TYPE.BUY_ORDER,
-    playload: { userId, stockSymbol, quantity, price, stockType },
+    data: { userId, stockSymbol, quantity, price, stockType },
   });
   res.json(response.payload);
 });
@@ -29,7 +29,7 @@ orderRouter.post("/sell", async (req, res) => {
 
   const response = await RedisManager.getInstance().sendAndAwait({
     type: REQUEST_TYPE.SELL_ORDER,
-    playload: { userId, stockSymbol, quantity, price, stockType },
+    data: { userId, stockSymbol, quantity, price, stockType },
   });
   res.json(response.payload);
 });

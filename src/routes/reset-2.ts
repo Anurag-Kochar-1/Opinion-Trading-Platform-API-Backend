@@ -7,7 +7,8 @@ export const resetRouter = Router();
 resetRouter.post("/", async (req, res) => {
   const response = await RedisManager.getInstance().sendAndAwait({
     type: REQUEST_TYPE.RESET_STATES,
-    payload: {},
+    data: {},
   });
+
   res.json(response.payload);
 });

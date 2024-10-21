@@ -24,7 +24,7 @@ tradeRouter.post("/mint", async (req, res) => {
   }
   const response = await RedisManager.getInstance().sendAndAwait({
     type: REQUEST_TYPE.MINT_TOKENS,
-    playload: { userId, stockSymbol, quantity, price },
+    data: { userId, stockSymbol, quantity, price },
   });
   res.json(response.payload);
 });

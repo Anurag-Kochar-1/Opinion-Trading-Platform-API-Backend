@@ -18,7 +18,7 @@ app.use(express.json());
 const port = process.env.PORT || 3000;
 
 app.get("/", (_, res: Response) => {
-  res.json({ message: "YEEEEEEEEEEHAWWWWWWWWWW" });
+  res.json({ message: "API BACKEND 🎇" });
 });
 
 app.use("/user", userRouter);
