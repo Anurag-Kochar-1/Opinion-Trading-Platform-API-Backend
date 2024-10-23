@@ -9,6 +9,6 @@ resetRouter.post("/", async (req, res) => {
     type: REQUEST_TYPE.RESET_STATES,
     data: {},
   });
-
-  res.json(response.payload);
+  const parsedResponse = JSON.parse(response?.payload?.message)
+  res.status(parsedResponse?.statusCode).json(parsedResponse)
 });

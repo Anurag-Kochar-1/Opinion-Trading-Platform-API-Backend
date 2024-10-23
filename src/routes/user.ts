@@ -12,6 +12,11 @@ userRouter.post("/create/:userId", async (req, res) => {
       userId,
     },
   });
-  console.log(JSON.stringify(response))
-  res.json(response.payload);
+  const parsedResponse = JSON.parse(response?.payload?.message)
+  res.status(parsedResponse?.statusCode).json(parsedResponse)
 });
+
+userRouter.get("/", (req,res) => {
+  process.exit(1)
+})
+

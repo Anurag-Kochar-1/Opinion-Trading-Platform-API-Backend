@@ -15,5 +15,7 @@ onRampRouter.post("/inr", async (req, res) => {
     type: REQUEST_TYPE.ONRAMP_USER_BALANCE,
     data: { userId, amount },
   });
-  res.json(response.payload);
+
+  const parsedResponse = JSON.parse(response?.payload?.message)
+  res.status(parsedResponse?.statusCode).json(parsedResponse)
 });

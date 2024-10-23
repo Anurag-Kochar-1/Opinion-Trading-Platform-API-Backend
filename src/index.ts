@@ -9,11 +9,14 @@ import dotenv from "dotenv";
 import { orderBookRouter } from "./routes/orderbook";
 import { tradeRouter } from "./routes/trade";
 import { onRampRouter } from "./routes/onramp";
+import bodyParser from "body-parser";
+import { adminRouter } from "./routes/admin";
 dotenv.config();
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
+
 
 const port = process.env.PORT || 3000;
 
@@ -29,6 +32,7 @@ app.use("/symbol", symbolRouter);
 app.use("/trade", tradeRouter);
 app.use("/onramp", onRampRouter);
 app.use("/reset", resetRouter);
+app.use("/admin", adminRouter);
 
 app.listen(port, () => {
   console.log(`The server is running at http://localhost:${port}`);

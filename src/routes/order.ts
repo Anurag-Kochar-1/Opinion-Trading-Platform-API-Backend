@@ -11,12 +11,15 @@ orderRouter.post("/buy", async (req, res) => {
     res.status(400).json({ error: "Missing required fields" });
     return;
   }
-
   const response = await RedisManager.getInstance().sendAndAwait({
     type: REQUEST_TYPE.BUY_ORDER,
     data: { userId, stockSymbol, quantity, price, stockType },
   });
-  res.json(response.payload);
+
+
+  const parsedResponse = JSON.parse(response?.payload?.message)
+  res.status(parsedResponse?.statusCode).json(parsedResponse)
+
 });
 
 orderRouter.post("/sell", async (req, res) => {
@@ -31,5 +34,6 @@ orderRouter.post("/sell", async (req, res) => {
     type: REQUEST_TYPE.SELL_ORDER,
     data: { userId, stockSymbol, quantity, price, stockType },
   });
-  res.json(response.payload);
+  const parsedResponse = JSON.parse(response?.payload?.message)
+  res.status(parsedResponse?.statusCode).json(parsedResponse)
 });

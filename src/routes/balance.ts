@@ -9,7 +9,8 @@ balanceRouter.get("/inr", async (req, res) => {
     type: REQUEST_TYPE.GET_INR_BALANCES,
     data: {},
   });
-  res.json(response.payload);
+  const parsedResponse = JSON.parse(response?.payload?.message)
+  res.status(parsedResponse?.statusCode).json(parsedResponse)
 });
 
 balanceRouter.get("/inr/:userId", async (req, res) => {
@@ -18,7 +19,8 @@ balanceRouter.get("/inr/:userId", async (req, res) => {
     type: REQUEST_TYPE.GET_USER_BALANCE,
     data: { userId },
   });
-  res.json(response.payload);
+  const parsedResponse = JSON.parse(response?.payload?.message)
+  res.status(parsedResponse?.statusCode).json(parsedResponse)
 });
 
 balanceRouter.get("/stock/:userId", async (req, res) => {
@@ -27,7 +29,8 @@ balanceRouter.get("/stock/:userId", async (req, res) => {
     type: REQUEST_TYPE.GET_USER_STOCK_BALANCE,
     data: { userId },
   });
-  res.json(response.payload);
+  const parsedResponse = JSON.parse(response?.payload?.message)
+  res.status(parsedResponse?.statusCode).json(parsedResponse)
 });
 
 balanceRouter.get("/stock", async (req, res) => {
@@ -35,5 +38,6 @@ balanceRouter.get("/stock", async (req, res) => {
     type: REQUEST_TYPE.GET_STOCK_BALANCES,
     data: {},
   });
-  res.json(response.payload);
+  const parsedResponse = JSON.parse(response?.payload?.message)
+  res.status(parsedResponse?.statusCode).json(parsedResponse)
 });

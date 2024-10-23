@@ -9,7 +9,8 @@ orderBookRouter.get("/", async (req, res) => {
     type: REQUEST_TYPE.VIEW_ORDERBOOK,
     data: {},
   });
-  res.json(response.payload);
+  const parsedResponse = JSON.parse(response?.payload?.message)
+  res.status(parsedResponse?.statusCode).json(parsedResponse)
 });
 
 orderBookRouter.get("/:stockSymbol", async (req, res) => {
@@ -18,5 +19,6 @@ orderBookRouter.get("/:stockSymbol", async (req, res) => {
     type: REQUEST_TYPE.GET_ORDERBOOK_BY_STOCK_SYMBOL,
     data: { stockSymbol },
   });
-  res.json(response.payload);
+  const parsedResponse = JSON.parse(response?.payload?.message)
+  res.status(parseInt(parsedResponse?.statusCode)).json(parsedResponse)
 });

@@ -5,26 +5,24 @@ import { RedisManager } from "../lib/redis-manager";
 export const tradeRouter = Router();
 
 tradeRouter.post("/mint", async (req, res) => {
-  const { userId, stockSymbol, quantity, price } = req.body;
+  const { userId, stockSymbol, quantity } = req.body;
 
   if (
     !userId ||
     !stockSymbol ||
-    !quantity ||
-    quantity <= 0 ||
-    !price ||
-    price < 0 ||
-    price > 10
+    !quantity
+
   ) {
     res.status(400).json({
       error:
-        "Invalid input. Ensure quantity is positive and price is between 0 and 10.",
+        "Invalid input.",
     });
     return;
   }
   const response = await RedisManager.getInstance().sendAndAwait({
     type: REQUEST_TYPE.MINT_TOKENS,
-    data: { userId, stockSymbol, quantity, price },
+    data: { userId, stockSymbol, quantity },
   });
-  res.json(response.payload);
+  const parsedResponse = JSON.parse(response?.payload?.message)
+  res.status(parsedResponse?.statusCode).json(parsedResponse)
 });

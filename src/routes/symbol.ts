@@ -13,5 +13,6 @@ symbolRouter.post("/create/:stockSymbol", async (req, res) => {
       stockSymbol,
     },
   });
-  res.json(response.payload);
+    const parsedResponse = JSON.parse(response?.payload?.message)
+  res.status(parsedResponse?.statusCode).json(parsedResponse)
 });

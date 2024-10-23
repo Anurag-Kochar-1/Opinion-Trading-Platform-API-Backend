@@ -30,7 +30,7 @@ export class RedisManager {
   public sendAndAwait(message: TODO) {
     return new Promise<TODO>((resolve) => {
       const id = this.getRandomClientId();
-      logger(`id => ${id}`);
+      logger(`client id => ${id}`);
       this.client.subscribe(id, (message) => {
         logger(`unsubscribing id => ${id}`);
         this.client.unsubscribe(id);
@@ -50,3 +50,5 @@ export class RedisManager {
     );
   }
 }
+
+
