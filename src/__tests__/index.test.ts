@@ -6,7 +6,7 @@ import { STATUS_TYPE } from "../types";
 describe("1", () => {
     const user1 = "user-1"
 
-    beforeEach(async () => {
+    beforeAll(async () => {
         await request(app).post(`/reset`)
     });
 
