@@ -37,3 +37,5 @@ app.use("/admin", adminRouter);
 app.listen(port, () => {
   console.log(`The server is running at http://localhost:${port}`);
 });
+
+export { app }

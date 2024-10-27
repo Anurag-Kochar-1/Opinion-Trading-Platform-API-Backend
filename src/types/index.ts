@@ -18,3 +18,8 @@ export const REQUEST_TYPE = {
   CRASH_SERVER: "CRASH_SERVER",
   RESTORE_SERVER_STATE: "RESTORE_SERVER_STATE",
 } as const;
+
+export enum STATUS_TYPE {
+  SUCCESS = "SUCCESS",
+  ERROR = "ERROR",
+}
