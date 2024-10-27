@@ -97,7 +97,7 @@ describe("Buying", () => {
 
     })
 
-    test("place buy order for 'yes'", async () => {
+    test("place buy order for 'yes' type", async () => {
         await request(app).post(`/order/buy`).send({
             userId: user1,
             stockSymbol: symbol,
@@ -129,16 +129,132 @@ describe("Buying", () => {
                 }
             }
         })
+    })
+})
 
-        // expect(message.no["1.5"]).toEqual({
-        //     total: 100,
-        //     orders: {
-        //         [userId]: {
-        //             type: "reverted",
-        //             quantity: 100,
-        //         },
-        //     },
-        // });
+describe("Selling", () => {
+    const user1 = "user-1"
+    const symbol = "ETH";
+
+    beforeAll(async () => {
+        await request(app).post("/reset")
     })
 
-})  
+    test("Create user -> On ramp inr balance -> create symbol", async () => {
+        const res1 = await request(app).post(`/user/create/${user1}`)
+        expect(res1.statusCode).toBe(201)
+        expect(res1.body).toEqual({ statusType: STATUS_TYPE.SUCCESS, statusCode: 201, statusMessage: `User ${user1} created successfully` });
+
+        const amount = 1000000
+        const res2 = await request(app).post("/onramp/inr").send({ userId: user1, amount })
+        expect(res2.status).toBe(200)
+        expect(res2.body).toEqual({ statusType: STATUS_TYPE.SUCCESS, statusMessage: `INR ${amount} added to ${user1} user`, statusCode: 200 })
+
+        const res3 = await request(app).post(`/symbol/create/${symbol}`)
+        expect(res3.statusCode).toBe(201)
+        expect(res3.body).toEqual({
+            statusType: STATUS_TYPE.SUCCESS,
+            statusCode: 201,
+            statusMessage: "Symbol created successfully"
+        })
+
+    })
+
+    test("mint", async () => {
+        const res = await request(app).post("/trade/mint").send({
+            userId: user1,
+            stockSymbol: symbol,
+            quantity: 10,
+        })
+
+        expect(res.statusCode).toBe(200)
+        expect(res.body).toEqual({ statusType: STATUS_TYPE.SUCCESS, data: { yes: { quantity: 10, locked: 0 }, no: { quantity: 10, locked: 0 } }, statusCode: 200, statusMessage: "Minted Successfully" })
+    })
+
+    test("place sell order for 'yes' type", async () => {
+        await request(app).post(`/order/sell`).send({
+            userId: user1,
+            stockSymbol: symbol,
+            quantity: 5,
+            price: 1,
+            stockType: "yes",
+        });
+
+        const res2 = await request(app).get("/orderbook")
+        expect(res2.statusCode).toBe(200)
+        expect(res2.body).toStrictEqual({
+            statusMessage: "",
+            statusType: STATUS_TYPE.SUCCESS,
+            statusCode: 200,
+            data: {
+                [symbol]: {
+                    yes: {
+                        1: {
+                            total: 5,
+                            orders: {
+                                [user1]: {
+                                    type: "sell",
+                                    quantity: 5
+                                }
+                            }
+                        }
+                    },
+                    no: {},
+
+                }
+            }
+        })
+
+    })
+
+})
+
+
+// const basic = ({ user1, symbol }: { user1: string, symbol: string }) => {
+//     return test("Create user -> On ramp inr balance -> create symbol", async () => {
+//         const res1 = await request(app).post(`/user/create/${user1}`)
+//         expect(res1.statusCode).toBe(201)
+//         expect(res1.body).toEqual({ statusType: STATUS_TYPE.SUCCESS, statusCode: 201, statusMessage: `User ${user1} created successfully` });
+
+//         const amount = 1000000
+//         const res2 = await request(app).post("/onramp/inr").send({ userId: user1, amount })
+//         expect(res2.status).toBe(200)
+//         expect(res2.body).toEqual({ statusType: STATUS_TYPE.SUCCESS, statusMessage: `INR ${amount} added to ${user1} user`, statusCode: 200 })
+
+//         const res3 = await request(app).post(`/symbol/create/${symbol}`)
+//         expect(res3.statusCode).toBe(201)
+//         expect(res3.body).toEqual({
+//             statusType: STATUS_TYPE.SUCCESS,
+//             statusCode: 201,
+//             statusMessage: "Symbol created successfully"
+//         })
+//     })
+// }
+
+describe("Matching", () => {
+    const user1 = "user-1"
+    const symbol = "DOGE"
+    beforeAll(async () => {
+        await request(app).post("/reset")
+    })
+
+    test("Create user -> On ramp inr balance -> create symbol", async () => {
+        const res1 = await request(app).post(`/user/create/${user1}`)
+        expect(res1.statusCode).toBe(201)
+        expect(res1.body).toEqual({ statusType: STATUS_TYPE.SUCCESS, statusCode: 201, statusMessage: `User ${user1} created successfully` });
+
+        const amount = 1000
+        const res2 = await request(app).post("/onramp/inr").send({ userId: user1, amount })
+        expect(res2.status).toBe(200)
+        expect(res2.body).toEqual({ statusType: STATUS_TYPE.SUCCESS, statusMessage: `INR ${amount} added to ${user1} user`, statusCode: 200 })
+
+        const res3 = await request(app).post(`/symbol/create/${symbol}`)
+        expect(res3.statusCode).toBe(201)
+        expect(res3.body).toEqual({
+            statusType: STATUS_TYPE.SUCCESS,
+            statusCode: 201,
+            statusMessage: "Symbol created successfully"
+        })
+    })
+
+})
