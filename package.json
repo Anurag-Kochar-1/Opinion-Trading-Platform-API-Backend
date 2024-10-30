@@ -6,9 +6,17 @@
   "type": "module",
   "scripts": {
     "test": "jest --coverage",
-    "start": "npx tsx --env-file=.env --watch  src/index.ts",
+    "start": "nodemon src/index.ts",
+    "build": "rimraf dist && tsc",
+    "ts.check": "tsc --project tsconfig.json",
+    "add-build": "git add dist",
     "bot": "npx tsx --env-file=.env --watch  src/scripts/bot.ts"
   },
+  "pre-commit": [
+    "ts.check",
+    "build",
+    "add-build"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -29,6 +37,7 @@
     "dotenv": "^16.4.5",
     "events": "^3.3.0",
     "express": "^4.21.1",
+    "pre-commit": "^1.2.2",
     "redis": "^4.7.0",
     "rimraf": "^6.0.1"
   }
