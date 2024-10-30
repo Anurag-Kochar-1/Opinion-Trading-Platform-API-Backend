@@ -8,6 +8,7 @@ orderRouter.post("/buy", async (req, res) => {
   const { userId, stockSymbol, quantity, price, stockType } = req.body;
 
   if (!userId || !stockSymbol || !quantity || !price || !stockType) {
+    console.log(req.body)
     res.status(400).json({ error: "Missing required fields" });
     return;
   }

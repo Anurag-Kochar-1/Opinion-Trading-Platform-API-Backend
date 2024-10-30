@@ -16,7 +16,7 @@ userRouter.post("/create/:userId", async (req, res) => {
   res.status(parsedResponse?.statusCode).json(parsedResponse)
 });
 
-userRouter.get("/me", async (req, res) => {
+userRouter.post("/me", async (req, res) => {
   const { userId } = req.body
   if (!userId) {
     res.status(400).json({ statusMessage: "userId is not present in body" })
