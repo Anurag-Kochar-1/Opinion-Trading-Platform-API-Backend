@@ -26,4 +26,13 @@ exports.symbolRouter.post("/create/:stockSymbol", (req, res) => __awaiter(void 0
     const parsedResponse = JSON.parse((_a = response === null || response === void 0 ? void 0 : response.payload) === null || _a === void 0 ? void 0 : _a.message);
     res.status(parsedResponse === null || parsedResponse === void 0 ? void 0 : parsedResponse.statusCode).json(parsedResponse);
 }));
+exports.symbolRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const response = yield redis_manager_1.RedisManager.getInstance().sendAndAwait({
+        type: types_1.REQUEST_TYPE.GET_ALL_STOCK_SYMBOLS,
+        data: {}
+    });
+    const parsedResponse = JSON.parse((_a = response === null || response === void 0 ? void 0 : response.payload) === null || _a === void 0 ? void 0 : _a.message);
+    res.status(parsedResponse === null || parsedResponse === void 0 ? void 0 : parsedResponse.statusCode).json(parsedResponse);
+}));
 //# sourceMappingURL=symbol.js.map

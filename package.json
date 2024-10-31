@@ -5,16 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --coverage",
-    "start": "nodemon src/index.ts",
+    "start": "npx tsx --env-file=.env --watch src/index.ts",
     "build": "rimraf dist && tsc",
     "ts.check": "tsc --project tsconfig.json",
     "add-build": "git add dist",
     "bot": "npx tsx --env-file=.env --watch  src/scripts/bot.ts"
-  }, "pre-commit": [
+  },
+  "pre-commit": [
     "ts.check",
     "build",
     "add-build"
-],
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",

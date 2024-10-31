@@ -43,6 +43,16 @@ exports.balanceRouter.get("/stock/:userId", (req, res) => __awaiter(void 0, void
     const parsedResponse = JSON.parse((_a = response === null || response === void 0 ? void 0 : response.payload) === null || _a === void 0 ? void 0 : _a.message);
     res.status(parsedResponse === null || parsedResponse === void 0 ? void 0 : parsedResponse.statusCode).json(parsedResponse);
 }));
+exports.balanceRouter.get("/stock/:userId/:stockSymbol", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const { userId, stockSymbol } = req.params;
+    const response = yield redis_manager_1.RedisManager.getInstance().sendAndAwait({
+        type: types_1.REQUEST_TYPE.GET_USER_STOCK_BALANCE_BY_STOCK_SYMBOL,
+        data: { userId, stockSymbol },
+    });
+    const parsedResponse = JSON.parse((_a = response === null || response === void 0 ? void 0 : response.payload) === null || _a === void 0 ? void 0 : _a.message);
+    res.status(parsedResponse === null || parsedResponse === void 0 ? void 0 : parsedResponse.statusCode).json(parsedResponse);
+}));
 exports.balanceRouter.get("/stock", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const response = yield redis_manager_1.RedisManager.getInstance().sendAndAwait({

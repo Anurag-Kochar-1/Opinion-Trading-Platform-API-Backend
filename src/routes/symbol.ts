@@ -13,6 +13,16 @@ symbolRouter.post("/create/:stockSymbol", async (req, res) => {
       stockSymbol,
     },
   });
-    const parsedResponse = JSON.parse(response?.payload?.message)
+  const parsedResponse = JSON.parse(response?.payload?.message)
   res.status(parsedResponse?.statusCode).json(parsedResponse)
 });
+
+symbolRouter.get("/", async (req, res) => {
+  const response = await RedisManager.getInstance().sendAndAwait({
+    type: REQUEST_TYPE.GET_ALL_STOCK_SYMBOLS,
+    data: {}
+  });
+  const parsedResponse = JSON.parse(response?.payload?.message)
+  res.status(parsedResponse?.statusCode).json(parsedResponse)
+});
+
