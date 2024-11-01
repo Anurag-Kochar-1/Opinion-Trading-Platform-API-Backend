@@ -11,19 +11,27 @@ import { tradeRouter } from "./routes/trade";
 import { onRampRouter } from "./routes/onramp";
 import bodyParser from "body-parser";
 import { adminRouter } from "./routes/admin";
+import { errorLogger, requestLogger } from "./middlewares/request-logger";
+import { logger } from "./config/logger";
+
 dotenv.config();
 
+
+
 const app = express();
+
 app.use(cors());
 app.use(bodyParser.json());
-
+app.use(requestLogger);
 
 const port = process.env.PORT || 3000;
 
 app.get("/", (_, res: Response) => {
+  logger.info('Home route accessed');
   res.json({ message: "API BACKEND 🎇" });
 });
 
+app.use(errorLogger);
 app.use("/user", userRouter);
 app.use("/order", orderRouter);
 app.use("/orderbook", orderBookRouter);

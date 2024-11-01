@@ -1,0 +1,4 @@
+{"level":"info","message":"Home route accessed","timestamp":"2024-11-01 22:15:02"}
+{"level":"info","message":"::1 - - [01/Nov/2024:16:45:02 +0000] \"GET / HTTP/1.1\" 304 - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0\" {}","timestamp":"2024-11-01 22:15:02"}
+{"level":"info","message":"::1 - - [01/Nov/2024:16:45:04 +0000] \"GET /sw.js HTTP/1.1\" 404 144 \"http://localhost:3000/sw.js\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0\" {}","timestamp":"2024-11-01 22:15:04"}
+{"level":"info","message":"::1 - - [01/Nov/2024:16:45:33 +0000] \"GET /sw.js HTTP/1.1\" 404 144 \"http://localhost:3000/sw.js\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0\" {}","timestamp":"2024-11-01 22:15:33"}
