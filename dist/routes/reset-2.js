@@ -13,8 +13,9 @@ exports.resetRouter = void 0;
 const express_1 = require("express");
 const redis_manager_1 = require("../lib/redis-manager");
 const types_1 = require("../types");
+const admin_middleware_1 = require("../middlewares/admin.middleware");
 exports.resetRouter = (0, express_1.Router)();
-exports.resetRouter.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.resetRouter.post("/", admin_middleware_1.adminMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const response = yield redis_manager_1.RedisManager.getInstance().sendAndAwait({
         type: types_1.REQUEST_TYPE.RESET_STATES,

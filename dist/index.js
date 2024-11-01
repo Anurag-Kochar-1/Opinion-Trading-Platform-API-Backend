@@ -36,4 +36,5 @@ app.use("/admin", admin_1.adminRouter);
 app.listen(port, () => {
     console.log(`The server is running at http://localhost:${port}`);
 });
+exports.default = app;
 //# sourceMappingURL=index.js.map

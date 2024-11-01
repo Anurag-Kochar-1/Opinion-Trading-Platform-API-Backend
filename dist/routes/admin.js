@@ -13,15 +13,16 @@ exports.adminRouter = void 0;
 const express_1 = require("express");
 const redis_manager_1 = require("../lib/redis-manager");
 const types_1 = require("../types");
+const admin_middleware_1 = require("../middlewares/admin.middleware");
 exports.adminRouter = (0, express_1.Router)();
-exports.adminRouter.post("/crash", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.adminRouter.post("/crash", admin_middleware_1.adminMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     redis_manager_1.RedisManager.getInstance().sendAndAwait({
         type: types_1.REQUEST_TYPE.CRASH_SERVER,
         data: {},
     });
     res.status(200).json({ message: "Server Crash Request Sent!" });
 }));
-exports.adminRouter.post("/restore-server-state", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.adminRouter.post("/restore-server-state", admin_middleware_1.adminMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     redis_manager_1.RedisManager.getInstance().sendAndAwait({
         type: types_1.REQUEST_TYPE.RESTORE_SERVER_STATE,
         data: {},
