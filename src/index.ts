@@ -13,6 +13,7 @@ import bodyParser from "body-parser";
 import { adminRouter } from "./routes/admin";
 import { errorLogger, requestLogger } from "./middlewares/request-logger";
 import { logger } from "./config/logger";
+import { STATUS_TYPE } from "./types";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(requestLogger);
+app.use(errorLogger);
 
 const port = process.env.PORT || 3000;
 
@@ -31,7 +33,15 @@ app.get("/", (_, res: Response) => {
   res.json({ message: "API BACKEND 🎇" });
 });
 
-app.use(errorLogger);
+app.get("/ping", (_, res: Response) => {
+  logger.info('Ping route accessed');
+  res.json({
+    statusType: STATUS_TYPE.SUCCESS,
+    statusMessage: "",
+    statusCode: 200
+  }).status(200);
+});
+
 app.use("/user", userRouter);
 app.use("/order", orderRouter);
 app.use("/orderbook", orderBookRouter);
@@ -45,4 +55,6 @@ app.use("/admin", adminRouter);
 app.listen(port, () => {
   console.log(`The server is running at http://localhost:${port}`);
 });
+
+
 export default app
