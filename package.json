@@ -9,7 +9,8 @@
     "ts.check": "tsc --project tsconfig.json",
     "add-build": "git add dist",
     "test": "jest --coverage",
-    "bot": "npx tsx --env-file=.env --watch  src/scripts/bot.ts"
+    "bot": "npx tsx --env-file=.env --watch  src/scripts/bot.ts",
+    "liquidity": "tsc -b && node dist/scripts/liquidity.js"
   },
   "pre-commit": [
     "ts.check",

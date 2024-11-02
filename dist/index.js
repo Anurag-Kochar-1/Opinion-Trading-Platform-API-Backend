@@ -25,6 +25,7 @@ app.use((0, cors_1.default)({
     origin: ['https://proboo.vercel.app', 'http://localhost:3000'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
+// app.use(cors());
 app.use(body_parser_1.default.json());
 app.use(request_logger_1.requestLogger);
 app.use(request_logger_1.errorLogger);
