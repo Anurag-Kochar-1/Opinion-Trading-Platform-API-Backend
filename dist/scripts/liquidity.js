@@ -17,9 +17,10 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 // Constants
 const BASE_URL = 'http://localhost:3000';
-const SYMBOLS = ["IS_TRUMP_WINNING", "IS_KAMALA_WINNING", "DOGE_TO_MOON", "INDIA_10_TRILLION_ECONOMY_BY_2030", "SWIGGY_IPO_BY_2025", "NFT_COMEBACK", "ARSENAL_WINNING", "SINGULARITY_BY_2030", "CHAT_GPT_5"];
-const NUM_BUYERS = 20;
-const NUM_ORDERS = 50;
+const SYMBOLS = ["IS_TRUMP_WINNING", "IS_KAMALA_WINNING", "INDIA_10_TRILLION_ECONOMY_BY_2030", "SWIGGY_IPO_BY_2025", "NFT_COMEBACK", "ARSENAL_WINNING", "SINGULARITY_BY_2030", "CHAT_GPT_5", "WILL_SUPER30_BE_SUCCESSFUL"];
+const NUM_BUYERS = 90;
+// Ensure NUM_ORDERS doesn't exceed NUM_BUYERS since each user can only place one order
+const NUM_ORDERS = Math.min(90, NUM_BUYERS);
 // Configuration
 const ORDER_CONFIG = {
     MIN_PRICE: 0.5, // in rupees
@@ -29,6 +30,8 @@ const ORDER_CONFIG = {
     MAX_TOTAL_COST_PAISE: 100000, // 1 lakh paise = 1000 rupees
     STOCK_TYPES: ['yes', 'no']
 };
+// Track used buyers
+const usedBuyers = new Set();
 // API client setup
 const api = axios_1.default.create({
     baseURL: BASE_URL,
@@ -45,13 +48,10 @@ function calculateTotalCostInPaise(quantity, priceInRupees) {
     return quantity * priceInPaise;
 }
 function getRandomPrice() {
-    // Calculate how many possible price steps there are
     const steps = Math.floor((ORDER_CONFIG.MAX_PRICE - ORDER_CONFIG.MIN_PRICE) / ORDER_CONFIG.PRICE_STEP);
-    // Get a random step number
     const randomStep = Math.floor(Math.random() * (steps + 1));
-    // Calculate the actual price by multiplying the step by 0.5 and adding the minimum price
     const price = ORDER_CONFIG.MIN_PRICE + (randomStep * ORDER_CONFIG.PRICE_STEP);
-    return Number(price.toFixed(1)); // Ensure we don't get floating point errors
+    return Number(price.toFixed(1));
 }
 function getRandomSymbol() {
     return SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
@@ -60,27 +60,39 @@ function getRandomStockType() {
     return ORDER_CONFIG.STOCK_TYPES[Math.floor(Math.random() * ORDER_CONFIG.STOCK_TYPES.length)];
 }
 function validatePrice(price) {
-    // Check if the price minus the minimum price is a multiple of 0.5
     const priceSteps = (price - ORDER_CONFIG.MIN_PRICE) / ORDER_CONFIG.PRICE_STEP;
     return Number.isInteger(priceSteps) &&
         price >= ORDER_CONFIG.MIN_PRICE &&
         price <= ORDER_CONFIG.MAX_PRICE;
 }
+function getUnusedBuyerId() {
+    const availableBuyers = Array.from({ length: NUM_BUYERS }, (_, i) => `buyer-${i}`).filter(buyerId => !usedBuyers.has(buyerId));
+    if (availableBuyers.length === 0) {
+        return null;
+    }
+    const randomIndex = Math.floor(Math.random() * availableBuyers.length);
+    const buyerId = availableBuyers[randomIndex];
+    usedBuyers.add(buyerId);
+    return buyerId;
+}
 function generateValidOrder() {
+    const buyerId = getUnusedBuyerId();
+    if (!buyerId) {
+        return null;
+    }
     while (true) {
         const quantity = getRandomNumber(1, ORDER_CONFIG.MAX_QUANTITY);
         const price = getRandomPrice();
         const totalCostPaise = calculateTotalCostInPaise(quantity, price);
         if (totalCostPaise <= ORDER_CONFIG.MAX_TOTAL_COST_PAISE && validatePrice(price)) {
             return {
-                userId: `buyer-${getRandomNumber(0, NUM_BUYERS - 1)}`,
+                userId: buyerId,
                 stockSymbol: getRandomSymbol(),
                 quantity,
                 price,
                 stockType: getRandomStockType()
             };
         }
-        // If total cost exceeds limit or price is invalid, loop will continue to generate new values
     }
 }
 // API functions
@@ -108,6 +120,7 @@ function placeBuyOrder(order) {
             }
             const totalCostPaise = calculateTotalCostInPaise(order.quantity, order.price);
             console.log(`Order details:
+      User ID: ${order.userId}
       Symbol: ${order.stockSymbol}
       Quantity: ${order.quantity}
       Price: ₹${order.price} (${convertRupeesToPaise(order.price)} paise)
@@ -118,6 +131,8 @@ function placeBuyOrder(order) {
         catch (error) {
             if (error instanceof Error) {
                 console.error(`Failed to place order for ${order.userId}: ${error.message}`);
+                // Remove user from usedBuyers if order fails
+                usedBuyers.delete(order.userId);
             }
         }
     });
@@ -128,10 +143,18 @@ function placeRandomBuyOrders() {
         // Print possible prices for verification
         const possiblePrices = Array.from({ length: Math.floor((ORDER_CONFIG.MAX_PRICE - ORDER_CONFIG.MIN_PRICE) / ORDER_CONFIG.PRICE_STEP) + 1 }, (_, i) => (ORDER_CONFIG.MIN_PRICE + i * ORDER_CONFIG.PRICE_STEP).toFixed(1));
         console.log('Possible prices:', possiblePrices.join(', '), '\n');
-        for (let i = 0; i < NUM_ORDERS; i++) {
+        let ordersPlaced = 0;
+        while (ordersPlaced < NUM_ORDERS) {
             const order = generateValidOrder();
+            if (!order) {
+                console.log('No more available buyers to place orders');
+                break;
+            }
             yield placeBuyOrder(order);
+            ordersPlaced++;
         }
+        console.log(`Total orders placed: ${ordersPlaced}`);
+        console.log('Users who placed orders:', Array.from(usedBuyers).join(', '));
     });
 }
 // Main execution
